@@ -5,8 +5,8 @@ void ofApp::setup(){
     //ofSetDataPathRoot("../Resources/data/");
     ofSetWindowShape(640, 480);
 
-    sendReal = true;
-    sendScreen = false;
+    sendReal = false;
+    sendScreen = true;
     
     kinect.setup();
     //kinect.setupFromONI("/Users/gene/Downloads/hometest_single.oni");
