@@ -22,4 +22,4 @@ If you want to build this from source, it requires [openFrameworks](https://www.
  - [ofxOpenNI](https://github.com/gameoverhack/ofxOpenNI/)
  - [ofxControl](https://github.com/genekogan/ofxControl)
 
-Make sure you follow the instructions in [ofxOpenNI](https://github.com/gameoverhack/ofxOpenNI/) to include the openni config folder in the data folder of the application, which has been omitted from this repository because of space considerations.
+Make sure you follow the instructions in [ofxOpenNI](https://github.com/gameoverhack/ofxOpenNI/) to include the openni config folder in the data folder of the application, which has been omitted from this repository because of space considerations. If you can't find it, you can download it in the [release](https://github.com/genekogan/KinectOSC/releases).
