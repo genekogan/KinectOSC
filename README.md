@@ -9,6 +9,8 @@ By default, it will stream to port 6448, and the addresses are:
  - **/kinect/realworld** : real-world coordinates
  - **/kinect/screen** : screen coordinates
 
+These settings can be edited in the file settings.xml inside the data folder.
+
 ## release version
 
 A release is available for download in the [releases page](https://github.com/genekogan/KinectOSC/releases)

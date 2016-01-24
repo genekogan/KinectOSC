@@ -5,34 +5,42 @@ void ofApp::setup(){
     //ofSetDataPathRoot("../Resources/data/");
     ofSetWindowShape(640, 480);
 
+    // default settings
     sendReal = false;
     sendScreen = true;
-    
+    oscDestination = OSC_DESTINATION_DEFAULT;
+    oscAddressRoot = OSC_ADDRESS_ROOT_DEFAULT;
+    oscPort = OSC_PORT_DEFAULT;
+
+    // load settings from file
+    ofXml xml;
+    xml.load("settings.xml");
+    xml.setTo("KinectOSC");
+    oscDestination = xml.getValue("ip");
+    oscPort = ofToInt(xml.getValue("port"));
+    oscAddressRoot = xml.getValue("address");
+
+    // setup kinect
     kinect.setup();
-    //kinect.setupFromONI("/Users/gene/Downloads/hometest_single.oni");
     kinect.addDepthGenerator();
     kinect.addUserGenerator();
     kinect.setMaxNumUsers(1);
     kinect.start();
     
-    oscAddressRoot = OSC_ADDRESS_ROOT_DEFAULT;
-    oscPort = OSC_PORT_DEFAULT;
-    osc.setup("localhost", oscPort);
+    // addresses + setup osc
+    realWorldAddress = oscAddressRoot+"/realworld";
+    screenAddress = oscAddressRoot+"/screen";
+    osc.setup(oscDestination, oscPort);
+    oscMessageString = "Sending OSC to "+oscDestination+", port "+ofToString(oscPort);
     
+    // setup gui
     gui.setName("KinectOSC");
-    gui.addToggle("send real-world coordinated", &sendReal);
-    gui.addToggle("send screen coordinates", &sendScreen);
+    gui.addToggle(realWorldAddress, &sendReal);
+    gui.addToggle(screenAddress, &sendScreen);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){
-    ofBackground(0);
-    
     kinect.update();
     if (!kinect.isNewFrame())   return;
     
@@ -49,15 +57,11 @@ void ofApp::draw(){
     }
     
     if (kinect.getNumTrackedUsers() == 0)   return;
-
-    // draw skeleton
-    kinect.drawSkeleton(0);
-    
     
     // send screen coordinates
     if (sendScreen) {
         ofxOscMessage msg;
-        msg.setAddress(oscAddressRoot+"/screen");
+        msg.setAddress(screenAddress);
         
         ofxOpenNIUser & user = kinect.getTrackedUser(0);
         for (int j=0; j<user.getNumJoints(); j++) {
@@ -68,11 +72,11 @@ void ofApp::draw(){
         }
         osc.sendMessage(msg);
     }
-
+    
     // send real world coordinates
     if (sendReal) {
         ofxOscMessage msg;
-        msg.setAddress(oscAddressRoot+"/realworld");
+        msg.setAddress(realWorldAddress);
         
         ofxOpenNIUser & user = kinect.getTrackedUser(0);
         for (int j=0; j<user.getNumJoints(); j++) {
@@ -84,6 +88,18 @@ void ofApp::draw(){
         }
         osc.sendMessage(msg);
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+    ofBackground(0);
+    
+    // draw skeleton
+    ofSetColor(255);
+    if (kinect.getNumTrackedUsers() > 0) {
+        kinect.drawSkeleton(0);
+    }
+    ofDrawBitmapString(oscMessageString, 15, ofGetHeight() - 4);
 }
 
 //--------------------------------------------------------------

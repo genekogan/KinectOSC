@@ -6,6 +6,7 @@
 #include "ofxControl.h"
 
 
+#define OSC_DESTINATION_DEFAULT "localhost"
 #define OSC_ADDRESS_ROOT_DEFAULT "/kinect"
 #define OSC_PORT_DEFAULT 6448
 
@@ -30,9 +31,14 @@ class ofApp : public ofBaseApp{
 
     ofxOpenNI kinect;
     bool hadUsers;
+    
     ofxOscSender osc;
+    string oscDestination;
     string oscAddressRoot;
     int oscPort;
+    string oscMessageString;
+    string realWorldAddress, screenAddress;
+
     bool sendReal, sendScreen;
     ofxControlWidget gui;
 };
